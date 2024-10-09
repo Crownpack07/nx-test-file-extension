@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "nx-test-file.helloWorld",
-        "title": "Hello World"
+        "command": "nx-test-file.runTestFile",
+        "title": "NX Test File"
       }
     ]
   },
