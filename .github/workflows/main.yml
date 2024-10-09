@@ -1,0 +1,61 @@
+name: Package and Release VS Code Extension
+
+on:
+  push:
+    branches:
+      - main  # Run this workflow when pushing to the main branch
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the latest code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'  # Specify the Node.js version
+
+    # Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Install vsce (Visual Studio Code Extension Manager)
+    - name: Install vsce
+      run: npm install -g vsce
+
+    # Package the VS Code extension
+    - name: Package the VS Code extension
+      run: vsce package --allow-missing-repository
+
+    # Get the current version from package.json
+    - name: Get version from package.json
+      id: get_version
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+    # Create a new release using semantic versioning
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ env.VERSION }}
+        name: Release ${{ env.VERSION }}
+        body: |
+          Automatic release for version ${{ env.VERSION }}.
+          This release includes the latest features and bug fixes.
+        files: |
+          *.vsix
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Upload the VSIX package as an artifact
+    - name: Upload VSIX package
+      uses: actions/upload-artifact@v3
+      with:
+        name: vsix-package
+        path: "*.vsix"
