@@ -20,9 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
           terminal.show();
           terminal.sendText(
-            `npx nx run core:test --test-file=${
-              isBashShell() ? bashCompatibleFilePath : filePath
-            }`
+            `npx nx run core:test --test-file=${bashCompatibleFilePath}`
           );
         } else {
           vscode.window.showErrorMessage(
@@ -34,14 +32,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(nxTestFileDisposable);
-}
-
-function isBashShell() {
-  const shellPath = vscode.workspace
-    .getConfiguration("terminal")
-    .get<string>("integrated.shell.windows");
-
-  return shellPath && (shellPath.includes("bash") || shellPath.includes("sh"));
 }
 
 export function deactivate() {}

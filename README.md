@@ -22,4 +22,8 @@ There are currently no support extension settings
 
 Initial release of nx test file, contains the bare bones with no custom configuration.
 
+### 1.0.1
+
+Fix: Removed redundant and broken shell type check
+
 ---
