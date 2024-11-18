@@ -1,5 +1,20 @@
 import * as vscode from "vscode";
 
+export const getNxProjectName = (filePath: string): string | null => {
+  const bashCompatibleFilePath = filePath.replace(/\\/g, "/");
+  const pathParts = bashCompatibleFilePath.split("/");
+  const appsIndex = pathParts.indexOf("apps");
+  const libsIndex = pathParts.indexOf("libs");
+
+  if (appsIndex !== -1) {
+    return pathParts[appsIndex + 1];
+  } else if (libsIndex !== -1) {
+    return pathParts[libsIndex + 1];
+  }
+
+  return null;
+};
+
 export function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "nx-test-file" is now active!');
 
@@ -11,6 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
         const filePath = editor.document.fileName;
         const bashCompatibleFilePath = filePath.replace(/\\/g, "/");
         if (bashCompatibleFilePath.endsWith(".test.ts")) {
+          const nxProjectName = getNxProjectName(bashCompatibleFilePath);
           let terminal = vscode.window.terminals.find(
             (t) => t.name === "Run Test"
           );
@@ -20,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
           terminal.show();
           terminal.sendText(
-            `npx nx run core:test --test-file=${bashCompatibleFilePath}`
+            `npx nx run ${nxProjectName}:test --test-file=${bashCompatibleFilePath}`
           );
         } else {
           vscode.window.showErrorMessage(
