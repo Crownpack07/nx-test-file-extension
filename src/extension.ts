@@ -25,7 +25,10 @@ export function activate(context: vscode.ExtensionContext) {
       if (editor) {
         const filePath = editor.document.fileName;
         const bashCompatibleFilePath = filePath.replace(/\\/g, "/");
-        if (bashCompatibleFilePath.endsWith(".test.ts")) {
+        if (
+          bashCompatibleFilePath.endsWith(".test.ts") ||
+          bashCompatibleFilePath.endsWith(".test.tsx")
+        ) {
           const nxProjectName = getNxProjectName(bashCompatibleFilePath);
           let terminal = vscode.window.terminals.find(
             (t) => t.name === "Run Test"
@@ -36,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
           terminal.show();
           terminal.sendText(
-            `npx nx run ${nxProjectName}:test --test-file=${bashCompatibleFilePath}`
+            `npx nx run ${nxProjectName}:test --testFile=${bashCompatibleFilePath}`
           );
         } else {
           vscode.window.showErrorMessage(

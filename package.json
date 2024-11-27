@@ -2,7 +2,7 @@
   "name": "nx-test-file",
   "displayName": "NXTestCommand",
   "description": "This extension is going to be used to run the nx run test command in a specific file that you are curreennttly i in",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "vscode": "^1.94.0"
   },
